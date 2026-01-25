@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: si_parte_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: si_parte
+      MYSQL_USER: si_parte_user
+      MYSQL_PASSWORD: si_parte_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./backend/database:/docker-entrypoint-initdb.d # inizializza DB con SQL
+
+  php:
+    build: .
+    container_name: si_parte_php
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8000:80" # mappa porta Apache a localhost:8000
+    volumes:
+      - ./backend/public:/var/www/html
+    environment:
+      MYSQLHOST: db
+      MYSQLPORT: 3306
+      MYSQLDATABASE: si_parte
+      MYSQLUSER: si_parte_user
+      MYSQLPASSWORD: si_parte_pass
+    working_dir: /var/www/html
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: si_parte_pma
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:

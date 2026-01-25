@@ -1,0 +1,18 @@
+{
+    "name": "si_parte/quiz",
+    "description": "Web app per suggerire destinazioni di viaggio basata su quiz e simulazione.",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SiParte\\Quiz\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Francesco D'Alessandro Virginia Richelli Tommaso Migliorato"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    }
+}
