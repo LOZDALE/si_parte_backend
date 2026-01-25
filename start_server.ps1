@@ -1,6 +1,4 @@
 # Script PowerShell per avviare il server PHP backend
-#.\start_server.ps1
-
 
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Avvio server PHP backend" -ForegroundColor Cyan

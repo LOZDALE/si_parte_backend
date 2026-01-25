@@ -1,0 +1,1 @@
+<?php echo "Il server funziona, sono nella root!"; ?>

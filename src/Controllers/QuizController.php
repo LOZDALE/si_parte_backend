@@ -2,29 +2,24 @@
 namespace SiParte\Quiz\Controllers;
 
 use SiParte\Quiz\Database\Connection;
-use PDO;
-use PDOException;
 use Exception;
 
 class QuizController {
-    private ?PDO $db;
+    private $db;
 
     public function __construct() {
         try {
             $this->db = Connection::getInstance();
         } catch (Exception $e) {
-            error_log("Errore connessione DB nel Controller: " . $e->getMessage());
+            error_log("Errore connessione nel Controller: " . $e->getMessage());
             $this->db = null;
         }
     }
 
-    private function jsonResponse(array $data): void {
+    public function getQuestions() {
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
-        exit;
-    }
 
-    public function getQuestions(): void {
+        // Domande Hardcoded per garantire il funzionamento anche senza DB
         $questions = [
             [
                 'id' => 1,
@@ -66,68 +61,75 @@ class QuizController {
             ]
         ];
 
-        $this->jsonResponse($questions);
+        echo json_encode($questions, JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
-    public function selectPaese(array $data): void {
+    public function selectPaese($data) {
+        header('Content-Type: application/json; charset=utf-8');
+
         if (!$this->db) {
-            $this->jsonResponse([
+            echo json_encode([
                 'success' => true,
-                'paese_selezionato' => [
-                    'id' => 1,
-                    'nome' => 'Italia (Offline)',
-                    'descrizione' => 'DB non connesso.'
-                ]
+                'paese_selezionato' => ['id' => 1, 'nome' => 'Italia (Offline)', 'descrizione' => 'DB non connesso.']
             ]);
+            exit;
         }
 
         try {
-            $stmt = $this->db->query("SELECT id, nome, descrizione FROM paesi ORDER BY RAND() LIMIT 1");
-            $paese = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->jsonResponse([
-                'success' => true,
-                'paese_selezionato' => $paese ?: ['id'=>0,'nome'=>'N/A','descrizione'=>'Nessun risultato']
-            ]);
-
-        } catch (PDOException $e) {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => $e->getMessage()
-            ]);
+            $result = $this->db->query("SELECT id, nome, descrizione FROM paesi ORDER BY RAND() LIMIT 1");
+            $paese = $result ? $result->fetch_assoc() : null;
+            echo json_encode(['success' => true, 'paese_selezionato' => $paese]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
+        exit;
     }
 
-    public function submitQuiz(array $data): void {
+    public function submitQuiz($data) {
+        header('Content-Type: application/json; charset=utf-8');
         $paeseId = $data['paese_id'] ?? null;
 
         if (!$this->db || !$paeseId) {
-            $this->jsonResponse([
+            echo json_encode([
                 'success' => true,
                 'recommended_destination' => [
                     'name' => 'Roma',
                     'description' => 'La città eterna ti aspetta per un viaggio indimenticabile!'
                 ]
             ]);
+            exit;
         }
 
         try {
-            $stmt = $this->db->prepare(
-                "SELECT nome AS name, descrizione AS description FROM citta WHERE paese_id = ? ORDER BY RAND() LIMIT 1"
-            );
-            $stmt->execute([$paeseId]);
-            $citta = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt = $this->db->prepare("SELECT nome as name, descrizione as description FROM citta WHERE id_paese = ? ORDER BY RAND() LIMIT 1");
+            if (!$stmt) {
+                throw new Exception("Prepare fallita: " . $this->db->error);
+            }
 
-            $this->jsonResponse([
+            $stmt->bind_param("i", $paeseId);
+            if (!$stmt->execute()) {
+                throw new Exception("Execute fallita: " . $stmt->error);
+            }
+
+            $citta = null;
+            $result = $stmt->get_result();
+            if ($result !== false) {
+                $citta = $result->fetch_assoc();
+            } else {
+                // Fallback se mysqlnd non è disponibile
+                $stmt->bind_result($name, $description);
+                if ($stmt->fetch()) {
+                    $citta = ['name' => $name, 'description' => $description];
+                }
+            }
+            echo json_encode([
                 'success' => true,
                 'recommended_destination' => $citta ?: ['name' => 'Capitale', 'description' => 'Esplora il cuore del paese!']
             ]);
-
-        } catch (PDOException $e) {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => $e->getMessage()
-            ]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
+        exit;
     }
 }
