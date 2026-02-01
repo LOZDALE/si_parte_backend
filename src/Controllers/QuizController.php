@@ -23,31 +23,31 @@ class QuizController {
         $questions = [
             [
                 'id' => 1,
-                'question' => 'Quale clima preferisci?',
+                'question' => 'Clima preferito?',
                 'answers' => [
-                    ['text' => 'Caldo e soleggiato', 'scores' => ['beach' => 3]],
+                    ['text' => 'Caldo e soleggiato', 'scores' => ['beach' => 3, 'city' => 1, 'culture' => 1]],
                     ['text' => 'Fresco e montuoso', 'scores' => ['mountain' => 3]],
-                    ['text' => 'Temperato', 'scores' => ['city' => 3]],
-                    ['text' => 'Freddo', 'scores' => ['mountain' => 1]]
+                    ['text' => 'Mite', 'scores' => ['city' => 3, 'culture' => 3]],
+                    ['text' => 'Tropicale', 'scores' => ['beach' => 3]]
                 ]
             ],
             [
                 'id' => 2,
                 'question' => 'Cosa cerchi in un viaggio?',
                 'answers' => [
-                    ['text' => 'Relax totale', 'scores' => ['beach' => 3]],
-                    ['text' => 'Avventura e sport', 'scores' => ['mountain' => 3]],
-                    ['text' => 'Musei e shopping', 'scores' => ['city' => 3]],
-                    ['text' => 'Natura', 'scores' => ['mountain' => 2]]
+                    ['text' => 'Relax totale', 'scores' => ['beach' => 3, 'mountain' => 1]],
+                    ['text' => 'Avventura e sport', 'scores' => ['mountain' => 1, 'city' => 3]],
+                    ['text' => 'Musei e shopping', 'scores' => ['city' => 2, 'culture' => 3]],
+                    ['text' => 'Natura', 'scores' => ['mountain' => 3, 'beach' => 1]]
                 ]
             ],
             [
                 'id' => 3,
                 'question' => 'Budget per persona?',
                 'answers' => [
-                    ['text' => 'Economico', 'scores' => ['city' => 2]],
+                    ['text' => 'Meno possibile', 'scores' => ['city' => 2]],
                     ['text' => 'Medio', 'scores' => ['beach' => 2]],
-                    ['text' => 'Lusso', 'scores' => ['beach' => 3, 'city' => 3]]
+                    ['text' => 'Non bado a spese', 'scores' => ['beach' => 3, 'city' => 3]]
                 ]
             ],
             [
@@ -57,6 +57,15 @@ class QuizController {
                     ['text' => 'Hotel di lusso', 'scores' => ['beach' => 3]],
                     ['text' => 'B&B caratteristico', 'scores' => ['city' => 2]],
                     ['text' => 'Rifugio o Campeggio', 'scores' => ['mountain' => 3]]
+                ]
+            ],
+            [
+                'id' => 5,
+                'question' => 'Quale tipo di attività preferisci?',
+                'answers' => [
+                    ['text' => 'Cultura e storia', 'scores' => ['culture' => 3]],
+                    ['text' => 'Sport e avventura', 'scores' => ['mountain' => 3, 'beach' => 1]],
+                    ['text' => 'Natura e relax', 'scores' => ['beach' => 2, 'mountain' => 2]]
                 ]
             ]
         ];
