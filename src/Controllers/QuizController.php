@@ -43,31 +43,54 @@ class QuizController {
             ],
             [
                 'id' => 3,
-                'question' => 'Budget per persona?',
+                'question' => 'Budget?',
                 'answers' => [
-                    ['text' => 'Meno possibile', 'scores' => ['city' => 2]],
-                    ['text' => 'Medio', 'scores' => ['beach' => 2]],
-                    ['text' => 'Non bado a spese', 'scores' => ['beach' => 3, 'city' => 3]]
+                    ['text' => '0€ - 500€', 'scores' => ['city' => 2, 'culture' => 2]],
+                    ['text' => '500€ - 1000€', 'scores' => ['beach' => 2, 'culture' => 2]],
+                    ['text' => '1000€ - 1500€', 'scores' => ['beach' => 2, 'city' => 2, 'mountain' => 2, 'culture' => 2]],
+                    ['text' => '1500€ - 2000€', 'scores' => ['mountain' => 3, 'beach' => 3, 'city' => 3, 'culture' => 3]]
                 ]
             ],
             [
                 'id' => 4,
-                'question' => 'Che tipo di alloggio preferisci?',
+                'question' => 'Cosa cerchi come alloggio?',
                 'answers' => [
-                    ['text' => 'Hotel di lusso', 'scores' => ['beach' => 3]],
-                    ['text' => 'B&B caratteristico', 'scores' => ['city' => 2]],
-                    ['text' => 'Rifugio o Campeggio', 'scores' => ['mountain' => 3]]
+                    ['text' => 'Hotel di lusso', 'scores' => ['beach' => 3, 'city' => 3, 'culture' => 3, 'mountain' => 2]],
+                    ['text' => 'B&B caratteristico', 'scores' => ['city' => 3, 'culture' => 3, 'beach' => 1]],
+                    ['text' => 'Rifugio o Campeggio', 'scores' => ['mountain' => 3, 'beach' => 2]],
+                    ['text' => 'Appartamento in centro', 'scores' => ['city' => 3, 'culture' => 3]]
                 ]
             ],
             [
                 'id' => 5,
                 'question' => 'Quale tipo di attività preferisci?',
                 'answers' => [
-                    ['text' => 'Cultura e storia', 'scores' => ['culture' => 3]],
-                    ['text' => 'Sport e avventura', 'scores' => ['mountain' => 3, 'beach' => 1]],
-                    ['text' => 'Natura e relax', 'scores' => ['beach' => 2, 'mountain' => 2]]
+                    ['text' => 'Musei e sculture', 'scores' => ['culture' => 3, 'city' => 2]],
+                    ['text' => 'Paesaggi mozzafiato', 'scores' => ['mountain' => 3, 'beach' => 2]],
+                    ['text' => 'Tramonti indimenticabili', 'scores' => ['beach' => 3, 'mountain' => 2]],
+                    ['text' => 'Vita notturna e divertimento', 'scores' => ['city' => 3, 'beach' => 1]]
                 ]
-            ]
+            ],
+            [
+                'id' => 6,
+                'question' => 'Quanti siete?',
+                'answers' => [
+                    ['text' => 'Solo', 'scores' => ['city' => 1, 'culture' => 1, 'beach' => 1, 'mountain' => 1]],
+                    ['text' => 'Coppia', 'scores' => ['beach' => 1, 'mountain' => 1, 'culture' => 1, 'city' => 1]],
+                    ['text' => 'Famiglia', 'scores' => ['city' => 1, 'culture' => 1, 'beach' => 1, 'mountain' => 1]],
+                    ['text' => 'Gruppo di amici', 'scores' => ['beach' => 1, 'city' => 1, 'mountain' => 1, 'culture' => 1]]
+                ]
+            ],
+            [
+                'id' => 7,
+                'question' => 'In che stagione vorresti partire?',
+                'answers' => [
+                    ['text' => 'Estate', 'scores' => ['city' => 2, 'culture' => 1, 'beach' => 3, 'mountain' => 2]],
+                    ['text' => 'Autunno', 'scores' => ['city' => 3, 'culture' => 2, 'mountain' => 2]],
+                    ['text' => 'Inverno', 'scores' => ['city' => 3, 'culture' => 1, 'mountain' => 3]],
+                    ['text' => 'Primavera', 'scores' => ['city' => 2, 'culture' => 3, 'beach' => 1, 'mountain' => 1]]
+                ]
+            ],
         ];
 
         echo json_encode($questions, JSON_UNESCAPED_UNICODE);
