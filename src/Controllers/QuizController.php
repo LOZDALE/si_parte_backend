@@ -155,8 +155,8 @@ class QuizController
                 'answers' => [
                     ['text' => '0€ - 500€', 'scores' => ['cultura' => 1, 'storia' => 1]],
                     ['text' => '500€ - 1000€', 'scores' => ['mare' => 1, 'città' => 1]],
-                    ['text' => '1000€ - 1500€', 'scores' => ['mare' => 2, 'montagna' => 2, 'città' => 2]],
-                    ['text' => '1500€ - 2000€+', 'scores' => ['divertimento' => 3, 'città' => 3, 'mare' => 2]]
+                    ['text' => '1000€ - 1500€', 'scores' => ['mare' => 2, 'montagna' => 2, 'natura' => 2]],
+                    ['text' => '1500€ - 2000€+', 'scores' => ['divertimento' => 4, 'città' => 3, 'shopping' => 5, 'tradizione' => 4, 'natura' => 2]]
                 ]
             ],
             [
