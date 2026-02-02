@@ -67,7 +67,6 @@ class QuizController
 
         try {
             // Calcolo punteggi categorie basato sulle prime 3 risposte
-            // Categorie allineate al DB: mare, montagna, città, cultura, divertimento, natura, storia, cibo
             $categoryScores = [
                 'mare' => 0,
                 'montagna' => 0,
@@ -76,7 +75,9 @@ class QuizController
                 'divertimento' => 0,
                 'natura' => 0,
                 'storia' => 0,
-                'cibo' => 0
+                'cibo' => 0,
+                'shopping' => 0,
+                'tradizione' => 0
             ];
             $questions = $this->getQuestionsInternal();
 
@@ -112,9 +113,17 @@ class QuizController
                 return $b['match_score'] <=> $a['match_score'];
             });
 
-            // Varietà: prendiamo i primi 5 (se presenti) e scegliamo uno a caso tra loro
-            $numToPick = min(count($paesi), 5);
-            $topPaesi = array_slice($paesi, 0, $numToPick);
+            // Varietà intelligente: prendiamo i paesi con punteggio vicino al migliore (entro il 20%)
+            $bestScore = $paesi[0]['match_score'];
+            $topPaesi = array_filter($paesi, function ($p) use ($bestScore) {
+                return $bestScore > 0 ? ($p['match_score'] >= $bestScore * 0.8) : true;
+            });
+
+            // Limitiamo comunque alla top 5 per non avere troppa scelta se i punteggi sono tutti simili
+            if (count($topPaesi) > 5) {
+                $topPaesi = array_slice($topPaesi, 0, 5);
+            }
+
             $paese = $topPaesi[array_rand($topPaesi)];
 
             $paese['flag'] = $this->getWikipediaFlag($paese['nome']);
@@ -135,7 +144,7 @@ class QuizController
                 'answers' => [
                     ['text' => 'Caldo e soleggiato', 'scores' => ['mare' => 4, 'divertimento' => 1, 'città' => 1]],
                     ['text' => 'Fresco e montuoso', 'scores' => ['montagna' => 5, 'natura' => 2]],
-                    ['text' => 'Mite', 'scores' => ['città' => 3, 'cultura' => 3, 'storia' => 2]],
+                    ['text' => 'Mite', 'scores' => ['città' => 4, 'cultura' => 3, 'storia' => 2]],
                     ['text' => 'Tropicale', 'scores' => ['mare' => 5, 'natura' => 3]]
                 ]
             ],
@@ -145,7 +154,7 @@ class QuizController
                 'answers' => [
                     ['text' => 'Relax totale', 'scores' => ['mare' => 4, 'montagna' => 2, 'natura' => 1]],
                     ['text' => 'Avventura e sport', 'scores' => ['montagna' => 4, 'natura' => 3, 'mare' => 1]],
-                    ['text' => 'Musei e shopping', 'scores' => ['cultura' => 4, 'città' => 4, 'storia' => 2]],
+                    ['text' => 'Musei e shopping', 'scores' => ['cultura' => 5, 'città' => 4, 'shopping' => 8]],
                     ['text' => 'Natura incontaminata', 'scores' => ['natura' => 5, 'montagna' => 3, 'mare' => 2]]
                 ]
             ],
@@ -156,7 +165,7 @@ class QuizController
                     ['text' => '0€ - 500€', 'scores' => ['cultura' => 1, 'storia' => 1]],
                     ['text' => '500€ - 1000€', 'scores' => ['mare' => 1, 'città' => 1]],
                     ['text' => '1000€ - 1500€', 'scores' => ['mare' => 2, 'montagna' => 2, 'natura' => 2]],
-                    ['text' => '1500€ - 2000€+', 'scores' => ['divertimento' => 4, 'città' => 3, 'shopping' => 5, 'tradizione' => 4, 'natura' => 2]]
+                    ['text' => '1500€ - 2000€+', 'scores' => ['shopping' => 5, 'tradizione' => 5]]
                 ]
             ],
             [
@@ -230,7 +239,9 @@ class QuizController
                 'divertimento' => 0,
                 'natura' => 0,
                 'storia' => 0,
-                'cibo' => 0
+                'cibo' => 0,
+                'shopping' => 0,
+                'tradizione' => 0
             ];
             $questions = $this->getQuestionsInternal();
 
