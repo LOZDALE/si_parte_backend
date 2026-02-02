@@ -109,7 +109,8 @@ class QuizController
 
             // Ordina per match_score
             usort($paesi, function ($a, $b) {
-                return $b['match_score'] <=> $a['match_score']; });
+                return $b['match_score'] <=> $a['match_score'];
+            });
 
             // Varietà: prendiamo i primi 5 (se presenti) e scegliamo uno a caso tra loro
             $numToPick = min(count($paesi), 5);
@@ -150,22 +151,22 @@ class QuizController
             ],
             [
                 'id' => 3,
-                'question' => 'Cosa non può mancare?',
+                'question' => 'Budget?',
                 'answers' => [
-                    ['text' => 'Ottimo cibo locale', 'scores' => ['cibo' => 5, 'cultura' => 2]],
-                    ['text' => 'Vita notturna', 'scores' => ['divertimento' => 5, 'città' => 3]],
-                    ['text' => 'Storia e monumenti', 'scores' => ['storia' => 5, 'cultura' => 4]],
-                    ['text' => 'Panorama da cartolina', 'scores' => ['natura' => 4, 'mare' => 3, 'montagna' => 3]]
+                    ['text' => '0€ - 500€', 'scores' => ['cultura' => 1, 'storia' => 1]],
+                    ['text' => '500€ - 1000€', 'scores' => ['mare' => 1, 'città' => 1]],
+                    ['text' => '1000€ - 1500€', 'scores' => ['mare' => 2, 'montagna' => 2, 'città' => 2]],
+                    ['text' => '1500€ - 2000€+', 'scores' => ['divertimento' => 3, 'città' => 3, 'mare' => 2]]
                 ]
             ],
             [
                 'id' => 4,
-                'question' => 'Preferenza budget?',
+                'question' => 'Cosa cerchi come alloggio?',
                 'answers' => [
-                    ['text' => 'Economico', 'scores' => ['storia' => 1, 'mare' => 1]],
-                    ['text' => 'Medio', 'scores' => ['cultura' => 1, 'città' => 1]],
-                    ['text' => 'Senza limiti', 'scores' => ['divertimento' => 2, 'città' => 2]],
-                    ['text' => 'All-inclusive', 'scores' => ['mare' => 2]]
+                    ['text' => 'Hotel di lusso', 'scores' => ['mare' => 3, 'città' => 3, 'divertimento' => 2]],
+                    ['text' => 'B&B caratteristico', 'scores' => ['cultura' => 3, 'storia' => 3, 'cibo' => 2]],
+                    ['text' => 'Rifugio o Campeggio', 'scores' => ['montagna' => 5, 'natura' => 4]],
+                    ['text' => 'Appartamento in centro', 'scores' => ['città' => 4, 'storia' => 2]]
                 ]
             ],
             [
@@ -258,8 +259,8 @@ class QuizController
                 }
 
                 // Bonus budget
-                $budgetAns = $answers[3] ?? 1; // Domanda 4 è il budget
-                $budgetMap = [0 => 500, 1 => 1000, 2 => 2000, 3 => 5000];
+                $budgetAns = $answers[2] ?? 1; // Domanda 3 (indice 2) è il budget
+                $budgetMap = [0 => 500, 1 => 1000, 2 => 1500, 3 => 2500];
                 $userBudget = $budgetMap[$budgetAns] ?? 1000;
 
                 if ($row['fascia_budget_base'] <= $userBudget) {
@@ -278,7 +279,8 @@ class QuizController
             } else {
                 // Ordina e scegli la migliore
                 usort($cittaList, function ($a, $b) {
-                    return $b['match_score'] <=> $a['match_score']; });
+                    return $b['match_score'] <=> $a['match_score'];
+                });
                 $bestCitta = $cittaList[0];
             }
 
