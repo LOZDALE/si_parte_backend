@@ -28,12 +28,15 @@ class QuizController
 
     private function getWikipediaFlag($title)
     {
-        $url = "https://it.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=" . urlencode($title);
+        $url = "https://it.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=" . rawurlencode(trim($title)) . "&redirects=1&pilicense=any";
         try {
             $context = stream_context_create([
                 'http' => ['header' => "User-Agent: SiParteApp/1.0 (contact: info@siparte.it)\r\n"]
             ]);
-            $response = file_get_contents($url, false, $context);
+            $response = @file_get_contents($url, false, $context);
+            if ($response === false)
+                return null;
+
             $data = json_decode($response, true);
             $pages = $data['query']['pages'] ?? [];
             foreach ($pages as $page) {
