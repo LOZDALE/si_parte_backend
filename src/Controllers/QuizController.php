@@ -308,15 +308,19 @@ class QuizController
             }
 
             $flag = $this->getWikipediaFlag($bestCitta['nome']);
+            $countryFlag = $this->getWikipediaFlag($bestCitta['nome_paese']);
+
             if (!$flag) {
-                // Fallback alla bandiera del paese se la città non ha immagine
-                $flag = $this->getWikipediaFlag($bestCitta['nome_paese']);
+                // Se la città non ha immagine, usiamo quella del paese
+                $flag = $countryFlag;
             }
 
             $response = [
                 'name' => $bestCitta['nome'],
                 'description' => $bestCitta['descrizione'],
-                'flag' => $flag
+                'flag' => $flag,
+                'country_flag' => $countryFlag,
+                'nome_paese' => $bestCitta['nome_paese']
             ];
 
             echo json_encode([
