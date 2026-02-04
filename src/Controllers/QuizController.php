@@ -148,7 +148,7 @@ class QuizController
                     ['text' => 'Caldo e soleggiato', 'scores' => ['mare' => 4, 'divertimento' => 1, 'città' => 1]],
                     ['text' => 'Fresco e montuoso', 'scores' => ['montagna' => 5, 'natura' => 2]],
                     ['text' => 'Mite', 'scores' => ['città' => 4, 'cultura' => 3, 'storia' => 2]],
-                    ['text' => 'Tropicale', 'scores' => ['mare' => 5, 'natura' => 3]]
+                    ['text' => 'Tropicale', 'scores' => ['mare' => 10, 'natura' => 5, 'relax' => 5]]
                 ]
             ],
             [

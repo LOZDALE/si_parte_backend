@@ -51,7 +51,9 @@ INSERT INTO `paesi` (`nome`, `codice_iso`, `categorie_suggerite`, `descrizione`)
 ('Polonia', 'POL', '["cultura", "storia", "città", "cibo"]', 'Storia ricca, città affascinanti e cucina tradizionale'),
 ('Repubblica Ceca', 'CZE', '["cultura", "storia", "birra", "città"]', 'Praga magica, birre eccellenti e storia affascinante'),
 ('Danimarca', 'DNK', '["città", "design", "cultura", "nordic"]', 'Design, hygge, città moderne e cultura nordica'),
-('Svezia', 'SWE', '["natura", "città", "design", "nordic"]', 'Natura selvaggia, design, città moderne e cultura nordica');
+('Svezia', 'SWE', '["natura", "città", "design", "nordic"]', 'Natura selvaggia, design, città moderne e cultura nordica'),
+('Thailandia', 'THA', '["mare", "natura", "cibo", "cultura"]', 'Spiagge tropicali, giungla lussureggiante e templi dorati'),
+('Maldive', 'MDV', '["mare", "relax", "natura"]', 'Atolli paradisiaci, acque cristalline e barriere coralline');
 
 -- Popolamento città (con riferimento ai paesi)
 -- ITALIA
@@ -110,4 +112,13 @@ INSERT INTO `citta` (`nome`, `id_paese`, `categoria_viaggio`, `fascia_budget_bas
 ('Atene', 7, 'cultura', 700.00, 'Storia antica, acropoli e archeologia', 9),
 ('Santorini', 7, 'mare', 1000.00, 'Isole cicladi, tramonti e mare azzurro', 10),
 ('Mykonos', 7, 'mare', 1100.00, 'Vita notturna, spiagge e divertimento', 9);
+
+-- THAILANDIA E MALDIVE
+SET @id_thai = (SELECT id FROM paesi WHERE nome = 'Thailandia');
+SET @id_maldive = (SELECT id FROM paesi WHERE nome = 'Maldive');
+
+INSERT INTO `citta` (`nome`, `id_paese`, `categoria_viaggio`, `fascia_budget_base`, `descrizione`, `popolarita`) VALUES
+('Bangkok', @id_thai, 'cultura', 1200.00, 'Metropoli vibrante, templi antichi e street food', 9),
+('Phuket', @id_thai, 'mare', 1400.00, 'Spiagge tropicali, mare cristallino e vita notturna', 10),
+('Malé', @id_maldive, 'mare', 2000.00, 'Capitale delle Maldive, atoli e barriere coralline', 8);
 
