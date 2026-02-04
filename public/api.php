@@ -20,7 +20,7 @@ try {
     // 1. CARICAMENTO AUTOLOAD
     // Se Railway ha installato composer, il file è qui:
     $autoloadPath = __DIR__ . '/../vendor/autoload.php';
-    
+
     if (file_exists($autoloadPath)) {
         require_once $autoloadPath;
     } else {
@@ -36,7 +36,7 @@ try {
 
     // 3. INIZIALIZZAZIONE 
     $quizController = new \SiParte\Quiz\Controllers\QuizController();
-    
+
     $route = $_GET['route'] ?? '';
     $method = $_SERVER['REQUEST_METHOD'];
 
@@ -47,13 +47,15 @@ try {
             $quizController->getQuestions();
         } elseif ($route === 'quiz/destinations') {
             $quizController->getDestinations();
+        } elseif ($route === 'quiz/migrate') {
+            $quizController->runMigration();
         } else {
             throw new Exception("Rotta GET non valida: " . htmlspecialchars($route));
         }
     } elseif ($method === 'POST') {
         // Legge il body JSON
         $input = json_decode(file_get_contents('php://input'), true) ?? [];
-        
+
         if ($route === 'quiz/select-paese') {
             $quizController->selectPaese($input);
         } elseif ($route === 'quiz/submit') {

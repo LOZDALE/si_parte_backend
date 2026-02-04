@@ -317,4 +317,47 @@ class QuizController
         }
         exit;
     }
+
+    public function runMigration()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        try {
+            if (!$this->db) {
+                throw new Exception("Connessione DB non disponibile.");
+            }
+
+            $messages = [];
+
+            // 1. Inserimento Paesi
+            $paesiQuery = "INSERT IGNORE INTO paesi (nome, codice_iso, categorie_suggerite, descrizione) VALUES 
+                ('Thailandia', 'THA', '[\"mare\", \"natura\", \"cibo\", \"cultura\", \"tropicale\"]', 'Spiagge tropicali, giungla lussureggiante e templi dorati'),
+                ('Maldive', 'MDV', '[\"mare\", \"relax\", \"natura\", \"tropicale\"]', 'Atolli paradisiaci, acque cristalline e barriere coralline')";
+
+            $this->db->query($paesiQuery);
+            $messages[] = "Paesi inseriti o già presenti.";
+
+            // 2. Recupero ID
+            $resThai = $this->db->query("SELECT id FROM paesi WHERE nome = 'Thailandia'");
+            $idThai = $resThai->fetch_assoc()['id'] ?? null;
+
+            $resMaldive = $this->db->query("SELECT id FROM paesi WHERE nome = 'Maldive'");
+            $idMaldive = $resMaldive->fetch_assoc()['id'] ?? null;
+
+            if ($idThai && $idMaldive) {
+                // 3. Inserimento Città
+                $cittaQuery = "INSERT IGNORE INTO citta (nome, id_paese, categoria_viaggio, fascia_budget_base, descrizione, popolarita) VALUES 
+                    ('Bangkok', $idThai, 'cultura', 1200.00, 'Metropoli vibrante, templi antichi e street food', 9),
+                    ('Phuket', $idThai, 'mare', 1400.00, 'Spiagge tropicali, mare cristallino e vita notturna', 10),
+                    ('Malé', $idMaldive, 'mare', 2000.00, 'Capitale delle Maldive, atoli e barriere coralline', 8)";
+
+                $this->db->query($cittaQuery);
+                $messages[] = "Città inserite o già presenti.";
+            }
+
+            echo json_encode(['success' => true, 'messages' => $messages]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
 }
