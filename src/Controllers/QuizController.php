@@ -105,8 +105,6 @@ class QuizController
             $questions = $this->getQuestionsInternal();
 
             foreach ($answers as $qIdx => $ansIdx) {
-                if ($qIdx >= 3)
-                    break; // Solo prime 3 per il paese
                 if (isset($questions[$qIdx]['answers'][$ansIdx]['scores'])) {
                     foreach ($questions[$qIdx]['answers'][$ansIdx]['scores'] as $cat => $score) {
                         if (isset($categoryScores[$cat])) {
@@ -123,9 +121,27 @@ class QuizController
                 $suggerite = json_decode($row['categorie_suggerite'], true) ?: [];
                 $matchScore = 0;
                 foreach ($suggerite as $cat) {
-                    if (isset($categoryScores[$cat])) {
-                        $matchScore += $categoryScores[$cat];
-                    }
+                    $catScore = $categoryScores[$cat] ?? 0;
+
+                    // Aliases per tag specifici nel DB che non sono nel controller
+                    if ($cat === 'festa')
+                        $catScore += $categoryScores['divertimento'] ?? 0;
+                    if ($cat === 'isole')
+                        $catScore += $categoryScores['mare'] ?? 0;
+                    if ($cat === 'sci')
+                        $catScore += $categoryScores['montagna'] ?? 0;
+                    if ($cat === 'birra' || $cat === 'vino')
+                        $catScore += $categoryScores['cibo'] ?? 0;
+                    if ($cat === 'luxury')
+                        $catScore += $categoryScores['shopping'] ?? 0;
+                    if ($cat === 'nordic' || $cat === 'design')
+                        $catScore += $categoryScores['cultura'] ?? 0;
+                    if ($cat === 'mostre')
+                        $catScore += $categoryScores['cultura'] ?? 0;
+                    if ($cat === 'pub')
+                        $catScore += $categoryScores['divertimento'] ?? 0;
+
+                    $matchScore += $catScore;
                 }
                 $row['match_score'] = $matchScore;
                 $paesi[] = $row;
@@ -165,70 +181,70 @@ class QuizController
                 'id' => 1,
                 'question' => 'Clima preferito?',
                 'answers' => [
-                    ['text' => 'Caldo e soleggiato', 'scores' => ['mare' => 4, 'divertimento' => 1, 'città' => 1]],
-                    ['text' => 'Fresco e montuoso', 'scores' => ['montagna' => 5, 'natura' => 2]],
-                    ['text' => 'Mite', 'scores' => ['città' => 4, 'cultura' => 3, 'storia' => 2]],
-                    ['text' => 'Tropicale', 'scores' => ['tropicale' => 10, 'mare' => 5, 'natura' => 5, 'relax' => 5]]
+                    ['text' => 'Caldo e soleggiato', 'scores' => ['mare' => 6, 'divertimento' => 4]],
+                    ['text' => 'Fresco e montuoso', 'scores' => ['montagna' => 6, 'natura' => 4]],
+                    ['text' => 'Mite', 'scores' => ['città' => 5, 'cultura' => 5]],
+                    ['text' => 'Tropicale', 'scores' => ['tropicale' => 7, 'mare' => 3]]
                 ]
             ],
             [
                 'id' => 2,
                 'question' => 'Cosa cerchi in un viaggio?',
                 'answers' => [
-                    ['text' => 'Relax totale', 'scores' => ['mare' => 4, 'montagna' => 2, 'natura' => 1]],
-                    ['text' => 'Avventura e sport', 'scores' => ['montagna' => 4, 'natura' => 3, 'mare' => 1]],
-                    ['text' => 'Musei e shopping', 'scores' => ['cultura' => 5, 'città' => 4, 'shopping' => 8]],
-                    ['text' => 'Natura incontaminata', 'scores' => ['natura' => 5, 'montagna' => 3, 'mare' => 2]]
+                    ['text' => 'Relax totale', 'scores' => ['relax' => 8, 'mare' => 2]],
+                    ['text' => 'Avventura e sport', 'scores' => ['montagna' => 5, 'natura' => 5]],
+                    ['text' => 'Musei e shopping', 'scores' => ['cultura' => 4, 'shopping' => 4, 'storia' => 2]],
+                    ['text' => 'Natura incontaminata', 'scores' => ['natura' => 8, 'montagna' => 2]]
                 ]
             ],
             [
                 'id' => 3,
                 'question' => 'Budget?',
                 'answers' => [
-                    ['text' => '0€ - 500€', 'scores' => ['cultura' => 1, 'storia' => 1]],
-                    ['text' => '500€ - 1000€', 'scores' => ['mare' => 1, 'città' => 1]],
-                    ['text' => '1000€ - 1500€', 'scores' => ['mare' => 2, 'montagna' => 2, 'natura' => 2]],
-                    ['text' => '1500€ - 2000€+', 'scores' => ['shopping' => 5, 'tradizione' => 5]]
+                    ['text' => '0€ - 500€', 'scores' => ['storia' => 4, 'cultura' => 4, 'città' => 2]],
+                    ['text' => '500€ - 1000€', 'scores' => ['mare' => 4, 'città' => 4, 'cibo' => 2]],
+                    ['text' => '1000€ - 1500€', 'scores' => ['natura' => 4, 'relax' => 4, 'montagna' => 2]],
+                    ['text' => '1500€ - 2000€+', 'scores' => ['shopping' => 4, 'tradizione' => 4, 'divertimento' => 2]]
                 ]
             ],
             [
                 'id' => 4,
                 'question' => 'Cosa cerchi come alloggio?',
                 'answers' => [
-                    ['text' => 'Hotel di lusso', 'scores' => ['mare' => 3, 'città' => 3, 'divertimento' => 2]],
-                    ['text' => 'B&B caratteristico', 'scores' => ['cultura' => 3, 'storia' => 3, 'cibo' => 2]],
-                    ['text' => 'Rifugio o Campeggio', 'scores' => ['montagna' => 5, 'natura' => 4]],
-                    ['text' => 'Appartamento in centro', 'scores' => ['città' => 4, 'storia' => 2]]
+                    ['text' => 'Hotel di lusso', 'scores' => ['relax' => 5, 'shopping' => 3, 'divertimento' => 2]],
+                    ['text' => 'B&B caratteristico', 'scores' => ['tradizione' => 5, 'cultura' => 3, 'cibo' => 2]],
+                    ['text' => 'Rifugio o Campeggio', 'scores' => ['montagna' => 7, 'natura' => 3]],
+                    ['text' => 'Appartamento in centro', 'scores' => ['città' => 6, 'storia' => 4]]
                 ]
             ],
             [
                 'id' => 5,
                 'question' => 'Quale attività ti ispira di più?',
                 'answers' => [
-                    ['text' => 'Visitare templi e siti antichi', 'scores' => ['storia' => 5, 'cultura' => 4]],
-                    ['text' => 'Trekking in mezzo al verde', 'scores' => ['natura' => 5, 'montagna' => 4]],
-                    ['text' => 'Aperitivo in spiaggia', 'scores' => ['mare' => 5, 'divertimento' => 3]],
-                    ['text' => 'Esplorare strade affollate', 'scores' => ['città' => 5, 'divertimento' => 2]]
+                    ['text' => 'Visitare templi e siti antichi', 'scores' => ['storia' => 6, 'cultura' => 4]],
+                    ['text' => 'Trekking in mezzo al verde', 'scores' => ['natura' => 6, 'montagna' => 4]],
+                    ['text' => 'Aperitivo in spiaggia', 'scores' => ['mare' => 5, 'divertimento' => 5]],
+                    ['text' => 'Esplorare strade affollate', 'scores' => ['città' => 6, 'shopping' => 4]]
                 ]
             ],
             [
                 'id' => 6,
                 'question' => 'Chi è il tuo compagno di viaggio?',
                 'answers' => [
-                    ['text' => 'Solo', 'scores' => ['natura' => 1, 'città' => 1]],
-                    ['text' => 'Coppia', 'scores' => ['mare' => 1, 'cultura' => 1]],
-                    ['text' => 'Famiglia', 'scores' => ['natura' => 1, 'mare' => 1]],
-                    ['text' => 'Gruppo di amici', 'scores' => ['divertimento' => 3, 'mare' => 1]]
+                    ['text' => 'Solo', 'scores' => ['natura' => 5, 'città' => 5]],
+                    ['text' => 'Coppia', 'scores' => ['relax' => 6, 'cultura' => 4]],
+                    ['text' => 'Famiglia', 'scores' => ['mare' => 5, 'natura' => 5]],
+                    ['text' => 'Gruppo di amici', 'scores' => ['divertimento' => 7, 'mare' => 3]]
                 ]
             ],
             [
                 'id' => 7,
                 'question' => 'In che stagione vorresti partire?',
                 'answers' => [
-                    ['text' => 'Estate', 'scores' => ['mare' => 4, 'montagna' => 2]],
-                    ['text' => 'Autunno', 'scores' => ['cultura' => 3, 'cibo' => 3]],
-                    ['text' => 'Inverno', 'scores' => ['montagna' => 4, 'città' => 2]],
-                    ['text' => 'Primavera', 'scores' => ['cultura' => 4, 'natura' => 3]]
+                    ['text' => 'Estate', 'scores' => ['mare' => 7, 'montagna' => 3]],
+                    ['text' => 'Autunno', 'scores' => ['cultura' => 5, 'cibo' => 5]],
+                    ['text' => 'Inverno', 'scores' => ['montagna' => 6, 'città' => 4]],
+                    ['text' => 'Primavera', 'scores' => ['natura' => 6, 'cultura' => 4]]
                 ]
             ],
         ];
@@ -282,7 +298,7 @@ class QuizController
 
             // Recupera le città del paese e calcola il matching
             $stmt = $this->db->prepare("
-                SELECT c.nome, c.descrizione, c.categoria_viaggio, c.fascia_budget_base, p.nome as nome_paese 
+                SELECT c.nome, c.descrizione, c.categoria_viaggio, c.fascia_budget_base, c.popolarita, p.nome as nome_paese 
                 FROM citta c
                 JOIN paesi p ON c.id_paese = p.id
                 WHERE c.id_paese = ?
@@ -318,8 +334,11 @@ class QuizController
             if (empty($cittaList)) {
                 $bestCitta = ['nome' => 'Capitale', 'descrizione' => 'Esplora il cuore del paese!', 'match_score' => 0];
             } else {
-                // Ordina e scegli la migliore
+                // Ordina per match_score e usa popolarità come tie-breaker
                 usort($cittaList, function ($a, $b) {
+                    if ($b['match_score'] === $a['match_score']) {
+                        return $b['popolarita'] <=> $a['popolarita'];
+                    }
                     return $b['match_score'] <=> $a['match_score'];
                 });
                 $bestCitta = $cittaList[0];
