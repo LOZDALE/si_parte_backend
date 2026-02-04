@@ -34,7 +34,7 @@ try {
         throw new Exception("Autoload fallito: La classe QuizController non è stata trovata. Verifica i namespace.");
     }
 
-    // 3. INIZIALIZZAZIONE
+    // 3. INIZIALIZZAZIONE 
     $quizController = new \SiParte\Quiz\Controllers\QuizController();
     
     $route = $_GET['route'] ?? '';
