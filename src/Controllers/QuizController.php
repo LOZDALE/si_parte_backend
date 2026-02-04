@@ -26,7 +26,25 @@ class QuizController
         exit;
     }
 
-    private function getWikipediaFlag($title)
+    private function getWikipediaFlag($title, $onlyOfficial = false)
+    {
+        if ($onlyOfficial) {
+            // Prova specificamente bandiere o stemmi
+            $res = $this->fetchWikiImage("Bandiera di " . $title);
+            if ($res)
+                return $res;
+
+            $res = $this->fetchWikiImage("Stemma di " . $title);
+            if ($res)
+                return $res;
+
+            return null; // Evita di restituire foto paesaggistiche se cerchiamo solo bandiere
+        }
+
+        return $this->fetchWikiImage($title);
+    }
+
+    private function fetchWikiImage($title)
     {
         $url = "https://it.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=" . rawurlencode(trim($title)) . "&redirects=1&pilicense=any";
         try {
@@ -307,11 +325,14 @@ class QuizController
                 $bestCitta = $cittaList[0];
             }
 
-            $flag = $this->getWikipediaFlag($bestCitta['nome']);
+            // Cerchiamo specificamente la bandiera o lo stemma della città
+            $flag = $this->getWikipediaFlag($bestCitta['nome'], true);
+
+            // La bandiera del paese (Wikipedia usa la bandiera come immagine principale degli Stati)
             $countryFlag = $this->getWikipediaFlag($bestCitta['nome_paese']);
 
             if (!$flag) {
-                // Se la città non ha immagine, usiamo quella del paese
+                // Se la città non ha una sua bandiera ufficiale (es. Phuket), usiamo quella nazionale
                 $flag = $countryFlag;
             }
 
@@ -370,6 +391,26 @@ class QuizController
             }
 
             echo json_encode(['success' => true, 'messages' => $messages]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
+    public function getDestinations()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        try {
+            if (!$this->db) {
+                throw new Exception("Connessione DB non disponibile.");
+            }
+            $result = $this->db->query("SELECT id, nome, codice_iso FROM paesi");
+            $paesi = [];
+            while ($row = $result->fetch_assoc()) {
+                $row['flag'] = $this->getWikipediaFlag($row['nome']);
+                $paesi[] = $row;
+            }
+            echo json_encode(['success' => true, 'destinations' => $paesi]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
