@@ -52,8 +52,8 @@ INSERT INTO `paesi` (`nome`, `codice_iso`, `categorie_suggerite`, `descrizione`)
 ('Repubblica Ceca', 'CZE', '["cultura", "storia", "birra", "città"]', 'Praga magica, birre eccellenti e storia affascinante'),
 ('Danimarca', 'DNK', '["città", "design", "cultura", "nordic"]', 'Design, hygge, città moderne e cultura nordica'),
 ('Svezia', 'SWE', '["natura", "città", "design", "nordic"]', 'Natura selvaggia, design, città moderne e cultura nordica'),
-('Thailandia', 'THA', '["mare", "natura", "cibo", "cultura"]', 'Spiagge tropicali, giungla lussureggiante e templi dorati'),
-('Maldive', 'MDV', '["mare", "relax", "natura"]', 'Atolli paradisiaci, acque cristalline e barriere coralline');
+('Thailandia', 'THA', '["mare", "natura", "cibo", "cultura", "tropicale"]', 'Spiagge tropicali, giungla lussureggiante e templi dorati'),
+('Maldive', 'MDV', '["mare", "relax", "natura", "tropicale"]', 'Atolli paradisiaci, acque cristalline e barriere coralline');
 
 -- Popolamento città (con riferimento ai paesi)
 -- ITALIA

@@ -80,7 +80,9 @@ class QuizController
                 'storia' => 0,
                 'cibo' => 0,
                 'shopping' => 0,
-                'tradizione' => 0
+                'tradizione' => 0,
+                'relax' => 0,
+                'tropicale' => 0
             ];
             $questions = $this->getQuestionsInternal();
 
@@ -138,7 +140,7 @@ class QuizController
         exit;
     }
 
-    private function getQuestionsInternal() 
+    private function getQuestionsInternal()
     {
         return [
             [
@@ -148,7 +150,7 @@ class QuizController
                     ['text' => 'Caldo e soleggiato', 'scores' => ['mare' => 4, 'divertimento' => 1, 'città' => 1]],
                     ['text' => 'Fresco e montuoso', 'scores' => ['montagna' => 5, 'natura' => 2]],
                     ['text' => 'Mite', 'scores' => ['città' => 4, 'cultura' => 3, 'storia' => 2]],
-                    ['text' => 'Tropicale', 'scores' => ['mare' => 10, 'natura' => 5, 'relax' => 5]]
+                    ['text' => 'Tropicale', 'scores' => ['tropicale' => 10, 'mare' => 5, 'natura' => 5, 'relax' => 5]]
                 ]
             ],
             [
@@ -244,7 +246,9 @@ class QuizController
                 'storia' => 0,
                 'cibo' => 0,
                 'shopping' => 0,
-                'tradizione' => 0
+                'tradizione' => 0,
+                'relax' => 0,
+                'tropicale' => 0
             ];
             $questions = $this->getQuestionsInternal();
 
