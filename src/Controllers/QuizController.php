@@ -263,7 +263,12 @@ class QuizController
             }
 
             // Recupera le città del paese e calcola il matching
-            $stmt = $this->db->prepare("SELECT nome, descrizione, categoria_viaggio, fascia_budget_base FROM citta WHERE id_paese = ?");
+            $stmt = $this->db->prepare("
+                SELECT c.nome, c.descrizione, c.categoria_viaggio, c.fascia_budget_base, p.nome as nome_paese 
+                FROM citta c
+                JOIN paesi p ON c.id_paese = p.id
+                WHERE c.id_paese = ?
+            ");
             $stmt->bind_param("i", $paeseId);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -303,9 +308,9 @@ class QuizController
             }
 
             $response = [
-                'name' => $bestCitta['name'] ?? $bestCitta['nome'],
-                'description' => $bestCitta['description'] ?? $bestCitta['descrizione'],
-                'flag' => $this->getWikipediaFlag($bestCitta['nome'])
+                'name' => $bestCitta['nome'],
+                'description' => $bestCitta['descrizione'],
+                'flag' => $this->getWikipediaFlag($bestCitta['nome_paese'])
             ];
 
             echo json_encode([
