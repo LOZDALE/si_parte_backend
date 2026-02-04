@@ -138,7 +138,7 @@ class QuizController
         exit;
     }
 
-    private function getQuestionsInternal()
+    private function getQuestionsInternal() 
     {
         return [
             [
