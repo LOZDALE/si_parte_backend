@@ -29,16 +29,23 @@ class QuizController
     private function getWikipediaFlag($title, $onlyOfficial = false)
     {
         if ($onlyOfficial) {
-            // Prova specificamente bandiere o stemmi
-            $res = $this->fetchWikiImage("Bandiera di " . $title);
-            if ($res)
-                return $res;
+            // Prova combinazioni in Italiano
+            $variations = [
+                "Bandiera di " . $title,
+                "Stemma di " . $title,
+                "Flag of " . $title,         // Fallback inglese per città internazionali
+                "Coat of arms of " . $title, // Fallback inglese
+                $title . " flag",
+                $title . " coat of arms"
+            ];
 
-            $res = $this->fetchWikiImage("Stemma di " . $title);
-            if ($res)
-                return $res;
+            foreach ($variations as $query) {
+                $res = $this->fetchWikiImage($query);
+                if ($res)
+                    return $res;
+            }
 
-            return null; // Evita di restituire foto paesaggistiche se cerchiamo solo bandiere
+            return null;
         }
 
         return $this->fetchWikiImage($title);
@@ -385,7 +392,8 @@ class QuizController
 
             // 1. Inserimento Paesi
             $paesiQuery = "INSERT IGNORE INTO paesi (nome, codice_iso, categorie_suggerite, descrizione) VALUES 
-                ('Thailandia', 'THA', '[\"mare\", \"natura\", \"cibo\", \"cultura\", \"tropicale\"]', 'Spiagge tropicali, giungla lussureggiante e templi dorati'),
+                ('Italia', 'ITA', '[\"cultura\", \"mare\", \"montagna\", \"cibo\", \"storia\", \"città\", \"tradizione\", \"relax\"]', 'Patria del patrimonio artistico, del cibo eccellente e delle coste mozzafiatto'),
+                ('Thailandia', 'THA', '[\"mare\", \"natura\", \"cibo\", \"cultura\", \"tropicale\", \"divertimento\", \"tradizione\"]', 'Spiagge tropicali, giungla lussureggiante e templi dorati'),
                 ('Maldive', 'MDV', '[\"mare\", \"relax\", \"natura\", \"tropicale\"]', 'Atolli paradisiaci, acque cristalline e barriere coralline')";
 
             $this->db->query($paesiQuery);
